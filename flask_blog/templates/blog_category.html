@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% from 'macros.html' import render_pagination %}
+
+{% block header_bg %}
+<div class="back-img">
+  <img text-align="center" width="auto" height="550px" src="{{ url_for('static', filename="shanghai.jpg") }}" alt="背景">
+</div>
+{% endblock %}
+
+{% block head_css %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='blog.css') }}">
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-xs-12 col-md-9">
+    {% for post in posts %}
+    <div class="post-box">
+      <div class="blog-info">
+        <span class="blog-date text-highlight">{{ post.published_date}}</span>
+        <span class="dc-sep">/</span>
+        <a class="blog-category" href="#">{{ post.category }}</a>
+      </div>
+      <a href="#">
+        <div class="blog-title">
+          {{ post.title }}
+        </div>
+      </a>
+      <div class="blog-content content-generic-body">
+        {{ post.content }}
+      </div>
+      <div class="blog-extra">
+        <a class="read-more" href="#">CONTINUE READING</a>
+      </div>
+      <hr>
+    </div>
+    {% endfor %}
+    {{ render_pagination(pagination, 'blog.index') }}
+  </div>
+
+  <div class="col-xs-12 col-md-3">
+      <div class="self-introduction">
+          <div class="title"><span>ABOUT</span></div>
+          <div class='avatar'>
+            <img id="avatar" src="{{ url_for('static', filename="avatar.png") }}" class="image-circle">
+          </div>
+          <div class="nickname">
+            <span>Kevin Xu</span>
+          </div>
+          <div class="intro">
+            <p>I’m Danny, and let me give you a warm welcome to visit my blog site. I hope you’ll enjoy it. Also, you can visit my <b><a href="#">HOME PAGE</a></b> to learn ablut me.</p>
+          </div>
+      </div>
+
+      <div class="side-bar-category">
+        <div class="side-bar-category-title content-generic-body">
+          <span>CATEGORIES</span>
+        </div>
+        <div class="side-bar-category-content">
+        {% for category in category_list_and_num %}
+        <a href="{{ url_for('blog.category', category_id=category[0].id) }}">
+            <div class="cate-item">
+                <div class="cate-name">
+                  <span>{{ category[0].category_name }}</span>
+                </div>
+                <div class="cate-rank">
+                  <span>({{ category[1] }})</span>
+                </div>
+            </div>
+         </a>
+         <hr>
+        {% endfor %}        
+        </div>
+      </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+<div class="footer">
+    <div class="copyright">
+        <span>Designed by Kebin Xu</span>
+    </div>
+</div>
+{% endblock %}
