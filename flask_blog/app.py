@@ -4,6 +4,8 @@ from flask_blog.models import db
 from flask_blog.handlers import front, blog, admin
 from flask_migrate import Migrate
 
+from flask_admin.contrib.sqla import ModelView
+
 def create_app(config):
     app = Flask(__name__)
     app.config.from_object(configs.get(config))

@@ -14,15 +14,17 @@
 
 {% block body %}
 <div class="row">
+
+  {% block post %}
   <div class="col-xs-12 col-md-9">
     {% for post in pagination.items %}
     <div class="post-box">
       <div class="blog-info">
         <span class="blog-date text-highlight">{{ post.published_date}}</span>
         <span class="dc-sep">/</span>
-        <a class="blog-category" href="#">{{ post.category }}</a>
+        <a class="blog-category" href="{{ url_for('blog.index', cat=post.category_id) }}">{{ post.category }}</a>
       </div>
-      <a href="#">
+      <a href="{{ url_for('blog.the_post', post_id=post.id) }}">
         <div class="blog-title">
           {{ post.title }}
         </div>
@@ -31,13 +33,14 @@
         {{ post.content }}
       </div>
       <div class="blog-extra">
-        <a class="read-more" href="#">CONTINUE READING</a>
+        <a class="read-more" href="{{ url_for('blog.the_post', post_id=post.id) }}">CONTINUE READING</a>
       </div>
       <hr>
     </div>
     {% endfor %}
-    {{ render_pagination(pagination, 'blog.index') }}
+    {{ render_pagination(pagination, category_id, 'blog.index') }}
   </div>
+  {% endblock %}
 
   <div class="col-xs-12 col-md-3">
       <div class="self-introduction">
@@ -49,7 +52,7 @@
             <span>Kevin Xu</span>
           </div>
           <div class="intro">
-            <p>I’m Danny, and let me give you a warm welcome to visit my blog site. I hope you’ll enjoy it. Also, you can visit my <b><a href="#">HOME PAGE</a></b> to learn ablut me.</p>
+            <p>I’m Kevin, and let me give you a warm welcome to visit my blog site. I hope you’ll enjoy it. Also, you can visit my <b><a href="#">HOME PAGE</a></b> to learn ablut me.</p>
           </div>
       </div>
 
@@ -59,7 +62,7 @@
         </div>
         <div class="side-bar-category-content">
         {% for category in category_list_and_num %}
-        <a href="{{ url_for('blog.category', category_id=category[0].id) }}">
+        <a href="{{ url_for('blog.index', cat=category[0].id) }}">
             <div class="cate-item">
                 <div class="cate-name">
                   <span>{{ category[0].category_name }}</span>
