@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_blog.config import configs
 from flask_blog.models import db, User
-from flask_blog.handlers import front, blog, admin
+from flask_blog.handlers import front, blog, admin, live
 from flask_migrate import Migrate
 from flask_login import LoginManager
 
@@ -34,3 +34,4 @@ def register_blueprints(app):
     app.register_blueprint(front)
     app.register_blueprint(blog)
     app.register_blueprint(admin)
+    app.register_blueprint(live)
