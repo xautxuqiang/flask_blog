@@ -1,17 +1,31 @@
 from flask_sqlalchemy import SQLAlchemy
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 db = SQLAlchemy()
 
 
-class User(db.Model):
+class User(db.Model, UserMixin):
 
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False)
+    username = db.Column(db.String(255), unique=True, index=True, nullable=False)
+    _password = db.Column('password', db.String(255), nullable=False)
     head_portrait = db.Column(db.LargeBinary) 
     introduction = db.Column(db.Text)
     posts = db.relationship('Post', backref='user', lazy='dynamic')
+
+    @property
+    def password(self):
+        return self._password
+
+    @password.setter
+    def password(self, orig_password):
+        self._password = generate_password_hash(orig_password)
+
+    def check_password(self, password):
+        return check_password_hash(self._password, password)
 
     def __repr__(self):
         return '<User:{}>'.format(self.username)
@@ -28,7 +42,7 @@ class Post(db.Model):
     __tablename__ = 'post'
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(255))
+    title = db.Column(db.String(255), unique=True, index=True, nullable=False)
     content = db.Column(db.Text)
     published_date = db.Column(db.DateTime)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -46,7 +60,7 @@ class Tag(db.Model):
     __tablename__ = 'tag'
 
     id = db.Column(db.Integer, primary_key=True)
-    tag_name = db.Column(db.String(255))
+    tag_name = db.Column(db.String(255), unique=True, index=True, nullable=False)
 
     def __repr__(self):
         return '<Tag:{}>'.format(self.tag_name)    
@@ -56,7 +70,7 @@ class Category(db.Model):
     __tablename__ = 'category'
 
     id = db.Column(db.Integer, primary_key=True)
-    category_name = db.Column(db.String(255))
+    category_name = db.Column(db.String(255), unique=True, index=True, nullable=False)
     posts = db.relationship('Post', backref="category", lazy="dynamic" )
 
     def __repr__(self):

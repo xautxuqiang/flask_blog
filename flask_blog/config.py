@@ -6,6 +6,7 @@ class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:xqxq1994@localhost:3306/blog'
     SQLALCHEMY_TRACK_MODIFICATIONS = True
     BLOG_PER_PAGE = 10
+    ADMIN_PER_PAGE = 15
 
 class ProductionConfig(BaseConfig):
     pass

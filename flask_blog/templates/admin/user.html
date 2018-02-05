@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import render_admin_pagination %}
+
+{% block body %}
+<ul class="nav nav-tabs">
+  <li role="presentation" class="active"><a href="#">所有项({{ user_num }})</a></li>
+  <li role="presentation"><a href="{{ url_for('admin.admin_user_create') }}">创建</a></li>
+  <li role="presentation"><a href="#">批量删除</a></li>
+</ul>
+<div class="table-responsive">
+  <table class="table table-hover table-bordered">
+    <tr>
+      <th>ID</th>
+      <th>用户名</th>
+      <th>密码</th>
+      <th>简介</th>
+      <th>操作</th>
+    </tr>
+    {% for user in pagination.items %}
+    </tr>
+      <td>{{ user.id }}</td>
+      <td>{{ user.username }}</td>
+      <td>{{ user.password }}</td>
+      <td>{{ user.introduction }}</td>
+      <td>
+          <div class="btn-group" role="group">
+            <a href="{{ url_for('admin.admin_user_edit', user_id=user.id) }}" type="button" class="btn btn-default" title="编辑">
+              <span class="glyphicon glyphicon-pencil" title="编辑" aria-hidden="true"></span>
+            </a>
+            <a href="{{ url_for('admin.admin_user_delete', user_id=user.id) }}" type="button" class="btn btn-default" title="删除">
+              <span class="glyphicon glyphicon-trash" title="删除" aria-hidden="true"></span>
+            </a>
+          </div>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+{{ render_admin_pagination(pagination, 'admin.admin_user') }}
+{% endblock %}
+

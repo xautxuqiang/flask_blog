@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import render_form %}
+
+{% block header_nav %}
+{% endblock %}
+
+{% block body %}
+<div class="col-md-4 col-xs-12">
+</div>
+<div class="col-md-4 col-xs-12">
+      <h3 class="admin-title">Admin登录页面</h3>
+      <div class="loginform-box">
+        {{ render_form(form, url_for('admin.login')) }}
+      </div>
+</div>
+<div class="col-md-4 col-xs-12">
+</div>
+{% endblock %}

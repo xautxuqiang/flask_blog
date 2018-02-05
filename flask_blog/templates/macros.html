@@ -1,3 +1,35 @@
+{% macro render_admin_pagination(pagination, endpoint) %}
+<nav class="nav-pagination">
+  <ul class="pagination">
+    {% if pagination.page >= 10 %}
+    <li><a href="{{ url_for(endpoint, page=1) }}">&laquo;</a></li>
+    {% endif %}
+    <li {% if not pagination.has_prev %} class="disabled" {% endif %}>
+        <a href="{{ url_for(endpoint, page=pagination.prev_num) if pagination.has_prev else '#' }}">&lsaquo;</a>
+    </li>
+
+    {% for page in pagination.iter_pages() %}
+      {% if page %}
+        {% if page != pagination.page %}
+          <li><a href="{{ url_for(endpoint, page=page) }}">{{ page }}</a></li>
+        {% else %}
+          <li class="active"><a href="#">{{ page }}<span class="sr-only">(current)</span></a></li>
+        {% endif %}
+      {% else %}
+        <li><span class="ellipsis">...</span></li>
+      {% endif %}
+    {% endfor %}
+
+    <li {% if not pagination.has_next %} class="disabled" {% endif%}>
+        <a href="{{ url_for(endpoint, page=pagination.next_num) if pagination.has_next else '#' }}">&rsaquo;</a>
+    </li>
+    {% if pagination.pages > 10 and pagination.pages - pagination.page >= 5 %}
+    <li><a href="{{ url_for(endpoint, page=pagination.pages) }}">&raquo;</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endmacro %}
+
 {% macro render_pagination(pagination, category_id, endpoint) %}
 <nav class="nav-pagination">
   <ul class="pagination pagination-lg">
@@ -29,3 +61,69 @@
   </ul>
 </nav>
 {% endmacro %}
+
+{% macro render_form(form, url) %}
+<form method="POST" action="{{ url }}">
+  {{ form.csrf_token }}
+  {% for field in form %}
+    {% if field.type == 'CSRFTokenField' %}
+    {{ '' }}
+    {% elif field.type == 'SubmitField' %}
+    {{ form.submit(class='btn btn-primary', type='submit') }}
+    {% elif field.type == 'BooleanField' %}
+    <div class="checkbox">
+      <label>{{ field() }} {{ field.label.text }}</label>
+    </div>
+    {% else %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+      {{ field.label }} {{ field(class="form-control") }}
+      {% if field.errors %}
+        {% for error in field.errors %}
+          <span class="help-block">{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+    </div>
+    {% endif %}
+  {% endfor %}
+</form>
+{% endmacro %}
+
+{% macro render_form_post(form, tags, edit, url) %}
+<form method="POST" action="{{ url }}">
+  {{ form.csrf_token }}
+  {% for field in form %}
+    {% if field.type == 'CSRFTokenField' %}
+        {{ '' }}
+    {% elif field.type == 'TextAreaField' %}
+        {{ field.label }}
+        <div id="editor">
+            <p>在此处编辑博客内容....</p>
+        </div>       
+        <button id="btn1">获取html</button>
+        <button id="btn2">获取text</button>
+    {% else %}
+    <div class="form-group {% if field.errors %}has-error{% endif %}">
+      {{ field.label }} {{ field(class="form-control") }}
+      {% if field.errors %}
+        {% for error in field.errors %}
+          <span class="help-block">{{ error }}</span>
+        {% endfor %}
+      {% endif %}
+    </div>
+    {% endif %}
+  {% endfor %}
+  <label for="tags">标签</label>
+  <select id="tags" multiple="multiple" data-placeholder="选择相关标签...">
+      {% for tag in tags %}
+          <option>{{ tag.tag_name }}</option>
+      {% endfor %}
+  </select>
+  <br>
+  {% if edit %}
+  <input class="btn btn-primary" id="submit" name="submit" type="submit" value="更新">
+  {% else %}
+  <input class="btn btn-primary" id="submit" name="submit" type="submit" value="创建">
+  {% endif %}
+</form>
+{% endmacro %}
+

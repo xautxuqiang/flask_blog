@@ -1,0 +1,14 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import render_form %}
+
+{% block body %}
+<ul class="nav nav-tabs">
+  <li role="presentation"><a href="{{ url_for('admin.admin_category') }}">所有项</a></li>
+  <li role="presentation" class="active"><a href="#">创建</a></li>
+  <li role="presentation"><a href="#">批量删除</a></li>
+</ul>
+<br>
+<div class="col-md-4 col-xs-12">
+    {{ render_form(form, url_for('admin.admin_category_create')) }}
+</div>
+{% endblock %}

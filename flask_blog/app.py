@@ -1,10 +1,9 @@
 from flask import Flask
 from flask_blog.config import configs
-from flask_blog.models import db
+from flask_blog.models import db, User
 from flask_blog.handlers import front, blog, admin
 from flask_migrate import Migrate
-
-from flask_admin.contrib.sqla import ModelView
+from flask_login import LoginManager
 
 def create_app(config):
     app = Flask(__name__)
@@ -18,7 +17,18 @@ def create_app(config):
 def register_extensions(app):
     db.init_app(app)
     Migrate(app, db)
-    
+
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(user_id)
+
+    login_manager.login_view = 'admin.login'
+    login_manager.session_protection = "strong"
+    login_manager.login_message = u"进入管理页面前请登录"
+    login_manager.login_message_category = "info"
 
 def register_blueprints(app):
     app.register_blueprint(front)

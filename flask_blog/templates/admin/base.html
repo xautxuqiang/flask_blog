@@ -5,7 +5,7 @@
         <title>{% block title %}{% endblock %}</title>
         {% block head_css %}
         <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
-        <link rel="stylesheet" href="{{ url_for('static', filename="main.css") }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='admin/main.css') }}">
         {% endblock %}
     </head>
     <body>
@@ -20,17 +20,21 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">
+          <a class="navbar-brand" href="{{ url_for('admin.index') }}">
             <img  class="brand-image" alt="brand" src="{{ url_for('static', filename="brand.png") }}">
           </a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav">
+            <li><a href="{{ url_for('admin.index') }}">Home</a></li>
+            <li><a href="{{ url_for('admin.admin_user') }}">User</a></li>
+            <li><a href="{{ url_for('admin.admin_post') }}">Post</a></li>
+            <li><a href="{{ url_for('admin.admin_category') }}">Category</a></li>
+            <li><a href="{{ url_for('admin.admin_tag') }}">Tag</a></li>
+          </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">HOME</a></li>
-            <li><a href="{{ url_for('blog.index') }}">BLOG</a></li>
-            <li><a href="#">BOX</a></li>
-            <li><a href="#">CONTACT</a></li>
+            <li><a href="{{ url_for('admin.logout') }}">注销</a></li>
           </ul>
         </div>
       </div>
@@ -40,10 +44,23 @@
     {% block header_bg %}{% endblock %}
 
     <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ message }}
+            </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}        
+
         {% block body %}{% endblock %}
     </div>
 
     {% block footer %}
+    <div class="footer">
+    </div>
     {% endblock %}
 
     {% block tail_js %}

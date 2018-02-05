@@ -1,0 +1,17 @@
+.brand-image {
+  height: 30px;
+}
+.admin-title {
+  text-align: center;
+  padding-top: 100px; 
+}
+.loginform-box {
+  padding-top: 40px;
+}
+.footer {
+  position: relative;
+  bottom: 0px;
+  margin-top: 100px;
+  height: 400px;
+  background-color: #99CCCC;
+}

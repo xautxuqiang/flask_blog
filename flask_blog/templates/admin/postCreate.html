@@ -1,0 +1,59 @@
+{% extends "admin/base.html" %}
+{% from "macros.html" import render_form_post %}
+
+{% block head_css %}
+    {{ super() }}
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.117/styles/kendo.common-material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.117/styles/kendo.material.min.css" />
+    <link rel="stylesheet" href="https://kendo.cdn.telerik.com/2018.1.117/styles/kendo.material.mobile.min.css"> 
+{% endblock %}
+
+{% block body %}
+<ul class="nav nav-tabs">
+  <li role="presentation"><a href="{{ url_for('admin.admin_post') }}">所有项</a></li>
+  <li role="presentation" class="active"><a href="#">创建</a></li>
+  <li role="presentation"><a href="#">批量删除</a></li>
+</ul>
+<br>
+<div class="col-md-8 col-xs-12">
+    {{ render_form_post(form, tags, edit, url_for('admin.admin_post_create')) }}
+</div>
+{% endblock %}
+
+
+{% block tail_js %}
+    {{ super() }}
+    <script src="https://kendo.cdn.telerik.com/2018.1.117/js/jquery.min.js"></script>
+    <script src="https://kendo.cdn.telerik.com/2018.1.117/js/kendo.all.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var ttags = $('#tags').kendoMultiSelect().data("kendoMultiSelect");
+            $("#submit").click(function() {
+                $.ajax ({
+                    async : false,
+                    type : 'POST',
+                    url : '/admin/post/create?ttags=' + ttags.value(),
+                });  
+            });
+        });
+    </script>
+    <!-- 富文本编辑器 -->
+    <script src="https://unpkg.com/wangeditor/release/wangEditor.min.js"></script>
+    <script>
+        var E = window.wangEditor
+        var editor = new E('#editor')
+        editor.create()
+    
+        document.getElementById('btn1').addEventListener('click', function () {
+            // 读取 html
+            alert(editor.txt.html())
+        }, false)
+
+        document.getElementById('btn2').addEventListener('click', function () {
+            // 读取 text
+            alert(editor.txt.text())
+        }, false)
+
+    </script>
+{% endblock %}
+
